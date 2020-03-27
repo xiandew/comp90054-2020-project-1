@@ -302,7 +302,12 @@ class PacmanSearchTest(testClasses.TestCase):
         search = moduleDict['search']
         searchAgents = moduleDict['searchAgents']
         gold_solution = [str.split(solutionDict['solution']), str.split(solutionDict['rev_solution'])]
-        gold_expanded = max(int(solutionDict['expanded_nodes']), int(solutionDict['rev_expanded_nodes']))
+        gold_expanded = [int(solutionDict['expanded_nodes']), int(solutionDict['rev_expanded_nodes'])]
+        try :
+            gold_expanded.append(int(solutionDict['with_cyclecheck_nodes']))
+            gold_expanded.append(int(solutionDict['rev_with_cyclecheck_nodes']))
+        except:
+            pass
 
         solution, expanded, error = self.getSolInfo(search, searchAgents)
         if error != None:
@@ -323,8 +328,8 @@ class PacmanSearchTest(testClasses.TestCase):
             grades.addMessage('\tcorrect solution:\n%s' % wrap_solution(gold_solution[0]))
             grades.addMessage('\tcorrect (reversed) solution:\n%s' % wrap_solution(gold_solution[1]))
             return False
-
-        if expanded > self.leewayFactor * gold_expanded and expanded > gold_expanded + 1:
+        
+        if not self.close_enough(expanded, gold_expanded) :
             grades.addMessage('FAIL: %s' % self.path)
             grades.addMessage('Too many node expanded; are you expanding nodes twice?')
             grades.addMessage('\tstudent nodes expanded: %s' % expanded)
@@ -338,6 +343,11 @@ class PacmanSearchTest(testClasses.TestCase):
         grades.addMessage('\tnodes expanded:\t\t%s' % expanded)
         return True
 
+    def close_enough(self, expanded, allowed_values) :
+        close = False
+        for value in allowed_values :
+            if expanded < self.leewayFactor * value and expanded > value / self.leewayFactor : close = True
+        return close
 
     def writeSolution(self, moduleDict, filePath):
         search = moduleDict['search']
