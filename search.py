@@ -130,7 +130,41 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
 def enforcedHillClimbing(problem, heuristic=nullHeuristic):
     """COMP90054 your solution to part 1 here """
-    util.raiseNotDefined()
+    state = problem.getStartState()
+    node = (state, '', util.manhattanDistance(state, problem.goal), None)
+
+    while not problem.isGoalState(state):
+        node = improve(node, problem)
+        if not node:
+            return []
+        state, action, h, parent = node
+
+    # Extract path
+    path = []
+    state, action, h, parent = node
+    while parent:
+        path.append(action)
+        node = parent
+        state, action, h, parent = node
+
+    return list(reversed(path))
+
+
+def improve(node, problem):
+    start_state, action, start_h, parent = node
+    my_queue = util.Queue()
+    my_queue.push(node)
+    visited = set()
+    while my_queue:
+        node = my_queue.pop()
+        state, action, h, parent = node
+        if state not in visited:
+            visited.add(state)
+            if h < start_h:
+                return node
+            for state, action, cost in problem.getSuccessors(state):
+                my_queue.push((state, action, util.manhattanDistance(state, problem.goal), node))
+    return None
 
 
 def idaStarSearch(problem, heuristic=nullHeuristic):
