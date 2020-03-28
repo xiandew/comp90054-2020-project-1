@@ -16,6 +16,7 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
+import math
 
 import util
 
@@ -167,9 +168,43 @@ def improve(node, problem):
     return None
 
 
+FOUND = 0
+NOT_FOUND = math.inf
+
+
 def idaStarSearch(problem, heuristic=nullHeuristic):
     """COMP90054 your solution to part 2 here """
-    util.raiseNotDefined()
+    state = problem.getStartState()
+    bound = util.manhattanDistance(state, problem.goal)
+    path = [(state, None)]
+
+    while True:
+        result = search(path, 0, bound, problem)
+        if result == FOUND:
+            return [action for state, action in path[1:]]
+        if result == NOT_FOUND:
+            return []
+        bound = result
+
+
+def search(path, g, bound, problem):
+    state, action = path[-1]
+    f = g + util.manhattanDistance(state, problem.goal)
+    if f > bound:
+        return f
+    if problem.isGoalState(state):
+        return FOUND
+
+    min = math.inf
+    for state, action, cost in problem.getSuccessors(state):
+        path.append((state, action))
+        result = search(path, g + cost, bound, problem)
+        if result == FOUND:
+            return FOUND
+        if result < min:
+            min = result
+        path.pop()
+    return min
 
 
 # Abbreviations
