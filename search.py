@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -70,28 +71,29 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
     A sample depth first search implementation is provided for you to help you understand how to interact with the problem.
     """
-    
+
     mystack = util.Stack()
     startState = (problem.getStartState(), '', 0, [])
     mystack.push(startState)
     visited = set()
-    while mystack :
+    while mystack:
         state = mystack.pop()
         node, action, cost, path = state
-        if node not in visited :
+        if node not in visited:
             visited.add(node)
-            if problem.isGoalState(node) :
+            if problem.isGoalState(node):
                 path = path + [(node, action)]
-                break;
+                break
             succStates = problem.getSuccessors(node)
-            for succState in succStates :
+            for succState in succStates:
                 succNode, succAction, succCost = succState
                 newstate = (succNode, succAction, cost + succCost, path + [(node, action)])
                 mystack.push(newstate)
@@ -99,15 +101,18 @@ def depthFirstSearch(problem):
     del actions[0]
     return actions
 
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -116,21 +121,23 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+
 def enforcedHillClimbing(problem, heuristic=nullHeuristic):
     """COMP90054 your solution to part 1 here """
     util.raiseNotDefined()
-    
+
+
 def idaStarSearch(problem, heuristic=nullHeuristic):
     """COMP90054 your solution to part 2 here """
     util.raiseNotDefined()
 
 
-                
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
